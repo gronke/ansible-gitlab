@@ -4,11 +4,32 @@ external_url "{{ gitlab_external_url }}"
 # gitlab.yml configuration
 gitlab_rails['time_zone'] = "{{ gitlab_time_zone }}"
 gitlab_rails['backup_keep_time'] = {{ gitlab_backup_keep_time }}
-gitlab_rails['gitlab_email_enabled'] = {{ gitlab_email_enabled }}
-{% if gitlab_email_enabled == "true" %}
+{% if gitlab_email_enabled == true %}
+gitlab_rails['gitlab_email_enabled'] = "True"
 gitlab_rails['gitlab_email_from'] = "{{ gitlab_email_from }}"
 gitlab_rails['gitlab_email_display_name'] = "{{ gitlab_email_display_name }}"
 gitlab_rails['gitlab_email_reply_to'] = "{{ gitlab_email_reply_to }}"
+{% if gitlab_smtp_enabled == true %}
+gitlab_rails['smtp_enable'] = "True"
+gitlab_rails['smtp_address'] = "{{ gitlab_smtp_host }}"
+{% if gitlab_smtp_port is defined %}
+gitlab_rails['smtp_port'] = "{{ gitlab_smtp_port }}"
+{% endif %}
+gitlab_rails['smtp_user'] = "{{ gitlab_smtp_user }}"
+gitlab_rails['smtp_pass'] = "{{ gitlab_smtp_password }}"
+{% if gitlab_smtp_authentication is defined %}
+gitlab_rails['smtp_authentication'] = "{{ gitlab_smtp_authentication }}"
+{% endif %}
+{% if gitlab_smtp_openssl_verify_mode is defined %}
+gitlab_rails['smtp_openssl_verify_mode'] = "{{ gitlab_smtp_openssl_verify_mode }}"
+{% endif %}
+{% if gitlab_smtp_tls is defined %}
+gitlab_rails['smtp_tls'] = "{{ gitlab_smtp_tls }}"
+{% endif %}
+{% if gitlab_smtp_enable_starttls_auto is defined %}
+gitlab_rails['smtp_enable_starttls_auto'] = "{{ gitlab_smtp_enable_starttls_auto }}"
+{% endif %}
+{% endif %}
 {% endif %}
 
 # Whether to redirect http to https.

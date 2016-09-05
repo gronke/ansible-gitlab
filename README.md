@@ -86,6 +86,14 @@ If you are running GitLab behind a reverse proxy, you may want to override the l
 
 If you are running GitLab behind a reverse proxy, you may wish to terminate SSL at another proxy server or load balancer
 
+    gitlab_custom_server_config: 'listen [::]:80;'
+
+The line in `gitlab_custom_server_config` is added to the builtin nginx server configurtion. In this case nginx also listens to any IPv6 address.
+
+    real_ip_trusted_addresses: ['2001:db8::/32']
+
+Optional list of trusted proxy (for example when using a external proxy for SSL termination)
+
 ## Dependencies
 
 None.

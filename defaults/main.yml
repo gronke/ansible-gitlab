@@ -38,3 +38,6 @@ gitlab_email_reply_to: 'gitlab@example.com'
 # SMTP configuration
 gitlab_smtp_enable: false
 gitlab_smtp_tls: true
+
+# Nginx
+gitlab_nginx_enabled: true

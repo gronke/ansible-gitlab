@@ -34,11 +34,6 @@ gitlab_rails['smtp_enable'] = false
 {% endif %}
 {% endif %}
 
-# Whether to redirect http to https.
-nginx['redirect_http_to_https'] = {{ 'true' if (gitlab_redirect_http_to_https == true) else 'false' }}
-nginx['ssl_certificate'] = "{{ gitlab_ssl_certificate }}"
-nginx['ssl_certificate_key'] = "{{ gitlab_ssl_certificate_key }}"
-
 # The directory where Git repositories will be stored.
 git_data_dir "{{ gitlab_git_data_dir }}"
 
@@ -60,11 +55,28 @@ gitlab_rails['ldap_enabled'] = false
 
 # GitLab Nginx
 ## See https://gitlab.com/gitlab-org/omnibus-gitlab/blob/master/doc/settings/nginx.md
+{% if gitlab_nginx_enabled == true %}
+nginx['enable'] = true
 {% if gitlab_nginx_listen_port is defined %}
 nginx['listen_port'] = "{{ gitlab_nginx_listen_port }}"
 {% endif %}
 {% if gitlab_nginx_listen_https is defined %}
-nginx['listen_https'] = "{{ gitlab_nginx_listen_https }}"
+nginx['listen_https'] = {{ 'true' if gitlab_nginx_listen_https == true else 'false' }}
+{% endif %}
+{% if gitlab_custom_server_config is defined %}
+nginx['custom_gitlab_server_config'] = '{{gitlab_custom_server_config}}'
+{% endif %}
+{% if gitlab_real_ip_trusted_addresses is defined %}
+nginx['real_ip_trusted_addresses'] = ['{{ gitlab_real_ip_trusted_addresses | join("', '") }}']
+{% endif %}
+# Whether to redirect http to https.
+nginx['redirect_http_to_https'] = {{ 'true' if (gitlab_redirect_http_to_https == true) else 'false' }}
+{% if (gitlab_ssl_certificate is defined) and (ssl_certificate_key is defined) %}
+nginx['ssl_certificate'] = "{{ gitlab_ssl_certificate }}"
+nginx['ssl_certificate_key'] = "{{ gitlab_ssl_certificate_key }}"
+{% endif %}
+{% else %}
+nginx['enable'] = false
 {% endif %}
 
 # To change other settings, see:
